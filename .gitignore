@@ -1,0 +1,15 @@
+# node / angular
+node_modules/
+dist/
+.tmp/
+.angular/
+
+# vsc
+.vscode/
+
+# .NET / C#
+bin/
+obj/
+
+# os
+.DS_Store
