@@ -1,0 +1,26 @@
+@if (story(); as story) {
+<td class="rank">{{ rank() }}.</td>
+<td class="vote">
+  <div class="arrow-up"></div>
+</td>
+<td class="details">
+  <div class="title-line">
+    <a
+      [href]="story.url || '/item/' + story.id"
+      class="title"
+      [target]="story.url ? '_blank' : '_self'"
+      >{{ story.title }}</a
+    >
+    @if (story.url) {
+    <span class="domain">{{ story.url }}</span>
+    }
+  </div>
+  <div class="meta-line">
+    <span>{{ story.score }} points by </span>
+    <a href="/user/{{ story.author }}">{{ story.author }}</a>
+    <span> {{ story.time }} | </span>
+    <a href="/item/{{ story.id }}">hide</a> |
+    <a href="/item/{{ story.id }}">{{ story.commentCount }}&nbsp;comments</a>
+  </div>
+</td>
+}

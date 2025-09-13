@@ -1,0 +1,76 @@
+$gray: #828282;
+
+:host {
+  display: table-row;
+}
+
+td {
+  padding: 2px;
+  vertical-align: top;
+}
+
+.rank {
+  text-align: right;
+  color: $gray;
+  font-size: 7pt;
+  padding-top: 5px;
+}
+
+.vote {
+  padding-top: 6px;
+  padding-right: 4px;
+}
+
+.arrow-up {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 7px solid $gray;
+  cursor: pointer;
+
+  &:hover {
+    border-bottom-color: #ff6600;
+  }
+}
+
+.details {
+  font-size: 8pt;
+  line-height: 1.2;
+}
+
+.title-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.title {
+  color: #000;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+  &:visited {
+    color: $gray;
+  }
+}
+
+.domain {
+  color: $gray;
+  font-size: 8pt;
+}
+
+.meta-line {
+  color: $gray;
+  font-size: 7pt;
+  margin-top: 4px;
+
+  a {
+    color: $gray;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

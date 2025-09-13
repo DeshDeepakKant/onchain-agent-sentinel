@@ -1,0 +1,48 @@
+:host {
+  display: block;
+  padding: 8px;
+}
+
+.search-bar {
+  margin-bottom: 8px;
+
+  input {
+    border: 1px solid #828282;
+    padding: 4px 8px;
+    font-size: 8pt;
+    width: 250px;
+    outline: none;
+
+    &:focus {
+      border-color: #ff6600;
+    }
+  }
+}
+
+.story-list {
+  background-color: white;
+  border-collapse: collapse;
+}
+
+.more-link-container {
+  padding: 8px 0 8px 35px;
+}
+
+.more-link-container button {
+  font-size: 8pt;
+  color: #000;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    color: #828282;
+  }
+}

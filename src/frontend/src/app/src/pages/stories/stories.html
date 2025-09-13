@@ -1,0 +1,22 @@
+<div class="search-bar">
+  <input type="text" placeholder="Search..." [value]="searchQuery()" (input)="onSearch($event)" />
+</div>
+
+@if (isLoading() && stories().length === 0) {
+<!-- <app-spinner /> -->
+} @else {
+<table class="story-list">
+  <tbody>
+    @for (story of stories(); track story.id; let i = $index) {
+    <tr app-story-list-item [story]="story" [rank]="(currentPage() - 1) * 30 + i + 1"></tr>
+    }
+  </tbody>
+</table>
+
+@if (hasMore()) {
+<div class="more-link-container">
+  <button (click)="loadMore()" [disabled]="isLoading()">
+    {{ isLoading() ? 'Loading...' : 'More' }}
+  </button>
+</div>
+} }
