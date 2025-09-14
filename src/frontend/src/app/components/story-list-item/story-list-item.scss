@@ -47,6 +47,7 @@ td {
 
 .title {
   color: #000;
+  font-size: 0.83rem;
   text-decoration: none;
   &:hover {
     text-decoration: underline;
@@ -59,6 +60,10 @@ td {
 .domain {
   color: $gray;
   font-size: 8pt;
+}
+
+.time-ago {
+  margin-left: 3px;
 }
 
 .meta-line {

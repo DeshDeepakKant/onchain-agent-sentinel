@@ -7,6 +7,7 @@
         viewBox="4 4 188 188"
         width="18"
         xmlns="http://www.w3.org/2000/svg"
+        routerLink="/"
       >
         <path d="m4 4h188v188h-188z" fill="#f60" />
         <path
@@ -14,12 +15,13 @@
           fill="#fff"
         />
       </svg>
-      <a class="site-title" routerLink="/">Hacker News</a>
+      <a class="site-title" routerLink="/">Hacker News Clone</a>
       <nav>
-        <a routerLink="/new" routerLinkActive="active">new</a> |
+        <a routerLink="/top" routerLinkActive="active">top</a> |
         <a routerLink="/ask" routerLinkActive="active">ask</a> |
         <a routerLink="/show" routerLinkActive="active">show</a> |
         <a routerLink="/jobs" routerLinkActive="active">jobs</a>
+        @if (router.url === '/best') { | <a routerLink="/best" routerLinkActive="active">best</a> }
       </nav>
     </div>
   </div>

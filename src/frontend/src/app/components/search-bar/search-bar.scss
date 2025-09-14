@@ -10,11 +10,17 @@
     border: 1px solid #828282;
     padding: 4px 8px;
     font-size: 8pt;
-    width: 250px;
+    width: 500px;
     outline: none;
 
     &:focus {
       border-color: #ff6600;
     }
+  }
+}
+
+@media (width < 768px) {
+  .search-bar input {
+    width: 95%;
   }
 }

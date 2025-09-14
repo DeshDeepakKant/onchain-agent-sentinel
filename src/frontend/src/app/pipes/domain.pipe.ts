@@ -11,7 +11,7 @@ export class DomainPipe implements PipeTransform {
     }
     try {
       const hostname = new URL(url).hostname;
-      return `(${hostname.replace(/^www\./, '')})`;
+      return `${hostname.replace(/^www\./, '')}`;
     } catch (e) {
       return '';
     }

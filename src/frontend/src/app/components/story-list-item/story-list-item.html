@@ -9,18 +9,24 @@
       [href]="story.url || '/item/' + story.id"
       class="title"
       [target]="story.url ? '_blank' : '_self'"
-      >{{ story.title }}</a
-    >
+      >{{ story.title }}
+    </a>
     @if (story.url) {
-    <span class="domain">{{ story.url | domain }}</span>
+    <a href="https://news.ycombinator.com/from?site={{ story.url | domain }}" class="domain"
+      >({{ story.url | domain }})</a
+    >
     }
   </div>
   <div class="meta-line">
     <span>{{ story.score }} points by </span>
-    <a href="/user/{{ story.author }}">{{ story.author }}</a>
-    <span> {{ story.time | timeAgo }} | </span>
-    <a href="/item/{{ story.id }}">hide</a> |
-    <a href="/item/{{ story.id }}">{{ story.commentCount }}&nbsp;comments</a>
+    <a href="https://news.ycombinator.com/user?id={{ story.author }}">{{ story.author }}</a>
+    <a href="https://news.ycombinator.com/item?id={{ story.id }}" class="time-ago">{{
+      story.time | timeAgo
+    }}</a>
+    |
+    <a href="https://news.ycombinator.com/item?id={{ story.id }}"
+      >{{ story.commentCount }}&nbsp;comments</a
+    >
   </div>
 </td>
 }
