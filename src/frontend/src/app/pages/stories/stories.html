@@ -1,10 +1,6 @@
-<div class="search-bar">
-  <input type="text" placeholder="Search..." [value]="searchQuery()" (input)="onSearch($event)" />
-</div>
+<app-search-bar [(query)]="searchQuery"></app-search-bar>
 
-@if (isLoading() && stories().length === 0) {
-<!-- <app-spinner /> -->
-} @else {
+@if (isLoading() && stories().length === 0) { } @else {
 <table class="story-list">
   <tbody>
     @for (story of stories(); track story.id; let i = $index) {

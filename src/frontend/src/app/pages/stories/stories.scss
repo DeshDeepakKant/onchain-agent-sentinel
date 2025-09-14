@@ -3,24 +3,8 @@
   padding: 8px;
 }
 
-.search-bar {
-  margin-bottom: 8px;
-
-  input {
-    border: 1px solid #828282;
-    padding: 4px 8px;
-    font-size: 8pt;
-    width: 250px;
-    outline: none;
-
-    &:focus {
-      border-color: #ff6600;
-    }
-  }
-}
-
 .story-list {
-  background-color: white;
+  background-color: #f6f6ef;
   border-collapse: collapse;
 }
 

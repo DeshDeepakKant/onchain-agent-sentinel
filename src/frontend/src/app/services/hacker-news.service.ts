@@ -25,11 +25,13 @@ export class HackerNewsService {
   }
 
   searchStories(
+    category: string,
     query: string,
     page: number = 1,
     pageSize: number = 30
   ): Observable<PagedResult<Story>> {
     const params = new HttpParams()
+      .set('category', category)
       .set('q', query)
       .set('page', page.toString())
       .set('pageSize', pageSize.toString());

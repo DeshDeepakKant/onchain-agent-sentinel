@@ -4,11 +4,12 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { StoryListItem } from '../../components/story-list-item/story-list-item';
 import { HackerNewsService } from '../../services/hacker-news.service';
 import { Story } from '../../models/story.model';
+import { SearchBar } from '../../components/search-bar/search-bar';
 
 @Component({
   selector: 'app-stories',
   standalone: true,
-  imports: [StoryListItem],
+  imports: [StoryListItem, SearchBar],
   templateUrl: './stories.html',
   styleUrl: './stories.scss',
 })
@@ -37,7 +38,7 @@ export class Stories {
         if (!query) {
           return this.hnService.getStories(this.category(), 1);
         }
-        return this.hnService.searchStories(query, 1);
+        return this.hnService.searchStories(this.category(), query, 1);
       })
     )
   );
@@ -45,7 +46,6 @@ export class Stories {
   constructor() {
     effect(
       () => {
-        console.log('effect fired');
         this.isLoading.set(true);
         this.currentPage.set(1);
         this.stories.set([]);
@@ -76,7 +76,7 @@ export class Stories {
     const query = this.searchQuery();
 
     const apiCall = query
-      ? this.hnService.searchStories(query, nextPage)
+      ? this.hnService.searchStories(this.category(), query, nextPage)
       : this.hnService.getStories(this.category(), nextPage);
 
     apiCall.subscribe((result) => {
@@ -85,10 +85,5 @@ export class Stories {
       this.currentPage.set(nextPage);
       this.isLoading.set(false);
     });
-  }
-
-  onSearch(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.searchQuery.set(input.value);
   }
 }

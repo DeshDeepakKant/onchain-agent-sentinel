@@ -12,44 +12,35 @@ public class StoriesService(IMemoryCache cache, HackerNewsClient client)
 
     public async Task<PagedResult<StoryDto>> GetStoriesAsync(string category, int page, int pageSize)
     {
-        var cacheKey = $"stories_{category}";
-
-        if (!cache.TryGetValue(cacheKey, out List<StoryDto>? stories))
-        {
-            var storyIds = await client.GetStoryIdsAsync(category, CancellationToken.None);
-            stories = await HydrateStoriesAsync(storyIds.Take(200), CancellationToken.None); 
-
-            cache.Set(cacheKey, stories, CacheOptions);
-        }
-
-        return Paginate(stories ?? [], page, pageSize);
+        var stories = await GetStoriesByCategoryAsync(category);
+        return Paginate(stories, page, pageSize);
     }
 
-    public async Task<PagedResult<StoryDto>> SearchAsync(string query, int page, int pageSize)
+    public async Task<PagedResult<StoryDto>> SearchAsync(string category, string query, int page, int pageSize)
     {
-        var storiesToSearch = await GetStoriesForSearchAsync();
-        
+        var storiesToSearch = await GetStoriesByCategoryAsync(category);
+
         if (string.IsNullOrWhiteSpace(query))
         {
             return Paginate(storiesToSearch, page, pageSize);
         }
 
         var lowerQuery = query.Trim().ToLowerInvariant();
-        
+
         var filtered = storiesToSearch.Where(s =>
             (s.Title?.ToLowerInvariant().Contains(lowerQuery) ?? false) ||
             (s.Author?.ToLowerInvariant().Contains(lowerQuery) ?? false)
         ).ToList();
-        
+
         return Paginate(filtered, page, pageSize);
     }
-    
-    private async Task<List<StoryDto>> GetStoriesForSearchAsync()
+
+    private async Task<List<StoryDto>> GetStoriesByCategoryAsync(string category)
     {
-        const string cacheKey = "stories_top";
+        var cacheKey = $"stories_{category}";
         if (!cache.TryGetValue(cacheKey, out List<StoryDto>? stories))
         {
-            var storyIds = await client.GetStoryIdsAsync("top", CancellationToken.None);
+            var storyIds = await client.GetStoryIdsAsync(category, CancellationToken.None);
             stories = await HydrateStoriesAsync(storyIds.Take(200), CancellationToken.None);
             cache.Set(cacheKey, stories, CacheOptions);
         }
@@ -59,7 +50,7 @@ public class StoriesService(IMemoryCache cache, HackerNewsClient client)
     private async Task<List<StoryDto>> HydrateStoriesAsync(IEnumerable<int> ids, CancellationToken ct)
     {
         var tasks = new List<Task<HnApiItemDto?>>();
-        var semaphore = new SemaphoreSlim(20); 
+        var semaphore = new SemaphoreSlim(20);
 
         foreach (var id in ids)
         {
@@ -72,9 +63,9 @@ public class StoriesService(IMemoryCache cache, HackerNewsClient client)
         }
 
         var results = await Task.WhenAll(tasks);
-        
+
         return results
-            .Where(item => item is { Dead: not true, Deleted: not true } 
+            .Where(item => item is { Dead: not true, Deleted: not true }
                        && (item!.Type == "story" || item.Type == "job"))
             .Select(item => new StoryDto
             {
@@ -90,12 +81,12 @@ public class StoriesService(IMemoryCache cache, HackerNewsClient client)
             })
             .ToList();
     }
-    
+
     private static PagedResult<T> Paginate<T>(IReadOnlyCollection<T> source, int page, int pageSize)
     {
         var totalCount = source.Count;
         var items = source.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-        
+
         return new PagedResult<T>
         {
             Items = items,
