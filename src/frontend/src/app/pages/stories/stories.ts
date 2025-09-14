@@ -1,6 +1,7 @@
-import { Component, effect, inject, input, signal } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import { Component, inject, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs';
 import { StoryListItem } from '../../components/story-list-item/story-list-item';
 import { HackerNewsService } from '../../services/hacker-news.service';
 import { Story } from '../../models/story.model';
@@ -9,13 +10,11 @@ import { SearchBar } from '../../components/search-bar/search-bar';
 @Component({
   selector: 'app-stories',
   standalone: true,
-  imports: [StoryListItem, SearchBar],
+  imports: [StoryListItem, SearchBar, RouterLink],
   templateUrl: './stories.html',
   styleUrl: './stories.scss',
 })
 export class Stories {
-  category = input.required<string>();
-
   stories = signal<Story[]>([]);
   currentPage = signal(1);
   hasMore = signal(false);
@@ -23,67 +22,45 @@ export class Stories {
   searchQuery = signal('');
 
   private hnService = inject(HackerNewsService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
-  private searchQuery$ = toObservable(this.searchQuery).pipe(
-    debounceTime(300),
-    distinctUntilChanged()
-  );
+  private data$ = this.route.queryParamMap.pipe(
+    switchMap((queryParams) => {
+      const category = this.route.snapshot.data['category'];
+      const page = Number(queryParams.get('p') ?? '1');
+      const query = queryParams.get('q') ?? '';
 
-  private searchResults = toSignal(
-    this.searchQuery$.pipe(
-      switchMap((query) => {
-        this.isLoading.set(true);
-        this.currentPage.set(1);
-        this.stories.set([]);
-        if (!query) {
-          return this.hnService.getStories(this.category(), 1);
-        }
-        return this.hnService.searchStories(this.category(), query, 1);
-      })
-    )
-  );
+      this.isLoading.set(true);
+      this.currentPage.set(page);
+      this.searchQuery.set(query);
 
-  constructor() {
-    effect(
-      () => {
-        this.isLoading.set(true);
-        this.currentPage.set(1);
-        this.stories.set([]);
-        this.hnService.getStories(this.category(), 1).subscribe((result) => {
+      const apiCall = query
+        ? this.hnService.searchStories(category, query, page)
+        : this.hnService.getStories(category, page);
+
+      return apiCall.pipe(
+        tap((result) => {
           this.stories.set(result.items);
           this.hasMore.set(result.hasMore);
           this.isLoading.set(false);
+          window.scrollTo(0, 0);
+        })
+      );
+    })
+  );
+
+  constructor() {
+    toObservable(this.searchQuery)
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((query) => {
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: { q: query || null, p: null },
+          queryParamsHandling: 'merge',
         });
-      },
-      { allowSignalWrites: true }
-    );
+      });
 
-    effect(() => {
-      const result = this.searchResults();
-      if (result) {
-        this.stories.set(result.items);
-        this.hasMore.set(result.hasMore);
-        this.isLoading.set(false);
-      }
-    });
-  }
-
-  loadMore(): void {
-    if (!this.hasMore() || this.isLoading()) return;
-
-    this.isLoading.set(true);
-    const nextPage = this.currentPage() + 1;
-    const query = this.searchQuery();
-
-    const apiCall = query
-      ? this.hnService.searchStories(this.category(), query, nextPage)
-      : this.hnService.getStories(this.category(), nextPage);
-
-    apiCall.subscribe((result) => {
-      this.stories.update((currentStories) => [...currentStories, ...result.items]);
-      this.hasMore.set(result.hasMore);
-      this.currentPage.set(nextPage);
-      this.isLoading.set(false);
-    });
+    this.data$.subscribe();
   }
 }

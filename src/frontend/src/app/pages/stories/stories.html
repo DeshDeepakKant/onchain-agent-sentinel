@@ -11,8 +11,12 @@
 
 @if (hasMore()) {
 <div class="more-link-container">
-  <button (click)="loadMore()" [disabled]="isLoading()">
-    {{ isLoading() ? 'Loading...' : 'More' }}
-  </button>
+  <a
+    class="more-link"
+    [routerLink]="['.']"
+    [queryParams]="{ p: currentPage() + 1 }"
+    queryParamsHandling="merge"
+    >More</a
+  >
 </div>
 } }

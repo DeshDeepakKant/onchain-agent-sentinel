@@ -18,10 +18,11 @@ export class HackerNewsService {
     pageSize: number = 30
   ): Observable<PagedResult<Story>> {
     const params = new HttpParams()
+      .set('category', category)
       .set('page', page.toString())
       .set('pageSize', pageSize.toString());
 
-    return this.http.get<PagedResult<Story>>(`${this.baseUrl}/${category}`, { params });
+    return this.http.get<PagedResult<Story>>(this.baseUrl, { params });
   }
 
   searchStories(

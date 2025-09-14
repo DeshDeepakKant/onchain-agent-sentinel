@@ -1,6 +1,5 @@
 :host {
   display: block;
-  padding: 8px;
 }
 
 .story-list {
@@ -12,21 +11,12 @@
   padding: 8px 0 8px 35px;
 }
 
-.more-link-container button {
+.more-link-container a {
   font-size: 8pt;
   color: #000;
   text-decoration: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
 
   &:hover {
     text-decoration: underline;
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    color: #828282;
   }
 }
