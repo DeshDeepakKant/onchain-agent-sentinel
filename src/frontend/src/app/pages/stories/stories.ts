@@ -2,8 +2,8 @@ import { Component, effect, inject, input, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { StoryListItem } from '../../components/story-list-item/story-list-item';
-import { HackerNewsService } from '../../../services/hacker-news.service';
-import { Story } from '../../../models/story.model';
+import { HackerNewsService } from '../../services/hacker-news.service';
+import { Story } from '../../models/story.model';
 
 @Component({
   selector: 'app-stories',

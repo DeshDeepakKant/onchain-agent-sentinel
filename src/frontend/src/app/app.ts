@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs';
-import { Header } from '../app/src/components/header/header';
+import { Header } from './components/header/header';
 import { Title } from '@angular/platform-browser';
 
 @Component({

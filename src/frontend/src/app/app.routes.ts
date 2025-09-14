@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { Stories } from './src/pages/stories/stories';
+import { Stories } from './pages/stories/stories';
 
 export const routes: Routes = [
   { path: '', component: Stories, data: { category: 'top' }, title: 'Hacker News' },

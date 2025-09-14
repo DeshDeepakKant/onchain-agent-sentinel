@@ -12,13 +12,13 @@
       >{{ story.title }}</a
     >
     @if (story.url) {
-    <span class="domain">{{ story.url }}</span>
+    <span class="domain">{{ story.url | domain }}</span>
     }
   </div>
   <div class="meta-line">
     <span>{{ story.score }} points by </span>
     <a href="/user/{{ story.author }}">{{ story.author }}</a>
-    <span> {{ story.time }} | </span>
+    <span> {{ story.time | timeAgo }} | </span>
     <a href="/item/{{ story.id }}">hide</a> |
     <a href="/item/{{ story.id }}">{{ story.commentCount }}&nbsp;comments</a>
   </div>
