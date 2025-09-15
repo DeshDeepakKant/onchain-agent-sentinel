@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { Stories } from './pages/stories/stories';
 
 export const routes: Routes = [
-  { path: '', component: Stories, data: { category: 'new' }, title: 'Hacker News Clone' },
+  { path: '', component: Stories, data: { category: 'new' }, title: 'Hacker News Assessment' },
   { path: 'top', component: Stories, data: { category: 'top' }, title: 'Top Stories' },
   { path: 'best', component: Stories, data: { category: 'best' }, title: 'Best Stories' },
   { path: 'ask', component: Stories, data: { category: 'ask' }, title: 'Ask HN' },

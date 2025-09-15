@@ -8,21 +8,24 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMemoryCache();
 
-builder.Services.AddHttpClient<IHackerNewsClient>(client =>
+builder.Services.AddHttpClient<IHackerNewsClient, HackerNewsClient>(client =>
 {
     client.BaseAddress = new Uri("https://hacker-news.firebaseio.com/v0/");
 })
-
 .AddStandardResilienceHandler();
 
-builder.Services.AddScoped<IStoriesService>();
+builder.Services.AddScoped<IStoriesService, StoriesService>();
 
+const string CorsPolicy = "FrontendOnly";
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngularApp", policy =>
-        policy.WithOrigins("http://localhost:4200")
-              .AllowAnyHeader()
-              .AllowAnyMethod());
+    options.AddPolicy(CorsPolicy, policy =>
+        policy.WithOrigins(
+            "http://localhost:4200",
+            "https://hacker-news-assessment.vercel.app"
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod());
 });
 
 var app = builder.Build();
@@ -34,7 +37,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("AllowAngularApp");
+app.UseCors(CorsPolicy);
 app.UseAuthorization();
 app.MapControllers();
+
+app.MapGet("/", () => Results.Ok(new { ok = true, ts = DateTimeOffset.UtcNow }));
+
 app.Run();
