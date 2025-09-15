@@ -1,13 +1,14 @@
 .container {
   display: flex;
   justify-content: center;
-  margin: 0.5rem auto 0rem auto;
+  margin: 0 auto;
   background-color: #ffffff;
   min-height: 100vh;
 }
 main {
   background-color: #f6f6ef;
   width: 84%;
+  padding-top: 0.5rem;
 }
 
 @media (width < 768px) {
