@@ -6,7 +6,7 @@
 <td class="details">
   <div class="title-line">
     <a
-      [href]="story.url || '/item/' + story.id"
+      [href]="story.url || 'https://news.ycombinator.com/item?id=' + story.id"
       class="title"
       [target]="story.url ? '_blank' : '_self'"
       >{{ story.title }}

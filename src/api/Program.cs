@@ -1,3 +1,4 @@
+using api.Interfaces;
 using api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,14 +8,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMemoryCache();
 
-builder.Services.AddHttpClient<HackerNewsClient>(client =>
+builder.Services.AddHttpClient<IHackerNewsClient>(client =>
 {
     client.BaseAddress = new Uri("https://hacker-news.firebaseio.com/v0/");
 })
 
 .AddStandardResilienceHandler();
 
-builder.Services.AddScoped<StoriesService>();
+builder.Services.AddScoped<IStoriesService>();
 
 builder.Services.AddCors(options =>
 {

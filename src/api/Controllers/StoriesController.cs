@@ -1,19 +1,27 @@
 using Microsoft.AspNetCore.Mvc;
 using api.Services;
+using api.Interfaces;
 
 namespace api.Controllers;
 
 [ApiController]
 [Route("api/stories")]
-public class StoriesController(StoriesService storiesService) : ControllerBase
+public class StoriesController : ControllerBase
 {
+    private readonly IStoriesService _storiesService;
+
+    public StoriesController(IStoriesService storiesService)
+    {
+        _storiesService = storiesService;
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetStories(
         [FromQuery] string category,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 30)
     {
-        var result = await storiesService.GetStoriesAsync(category, page, pageSize);
+        var result = await _storiesService.GetStoriesAsync(category, page, pageSize);
         Response.Headers["Cache-Control"] = "public, max-age=60";
         return Ok(result);
     }
@@ -25,7 +33,7 @@ public class StoriesController(StoriesService storiesService) : ControllerBase
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 30)
     {
-        var result = await storiesService.SearchAsync(category, q, page, pageSize);
+        var result = await _storiesService.SearchAsync(category, q, page, pageSize);
         Response.Headers["Cache-Control"] = "public, max-age=60";
         return Ok(result);
     }

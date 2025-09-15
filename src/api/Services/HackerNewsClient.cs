@@ -1,16 +1,17 @@
+using api.Interfaces;
 using api.Models;
 
 namespace api.Services;
 
-public class HackerNewsClient(HttpClient httpClient)
+public class HackerNewsClient(HttpClient httpClient) : IHackerNewsClient
 {
-    public async Task<int[]> GetStoryIdsAsync(string category, CancellationToken ct)
+    public virtual async Task<int[]> GetStoryIdsAsync(string category, CancellationToken ct)
     {
         var endpoint = $"{category.ToLowerInvariant()}stories.json";
         return await httpClient.GetFromJsonAsync<int[]>(endpoint, ct) ?? [];
     }
 
-    public async Task<HnApiItemDto?> GetItemAsync(int id, CancellationToken ct)
+    public virtual async Task<HnApiItemDto?> GetItemAsync(int id, CancellationToken ct)
     {
         try
         {

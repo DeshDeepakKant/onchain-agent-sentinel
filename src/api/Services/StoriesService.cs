@@ -1,41 +1,41 @@
+using api.Interfaces;
 using api.Models;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace api.Services;
 
-public class StoriesService(IMemoryCache cache, HackerNewsClient client)
+public class StoriesService(IMemoryCache cache, IHackerNewsClient client) : IStoriesService
 {
     private static readonly MemoryCacheEntryOptions CacheOptions = new()
     {
         AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(60)
     };
 
-    public async Task<PagedResult<StoryDto>> GetStoriesAsync(string category, int page, int pageSize)
+    public async Task<PagedResult<StoryDto>> GetStoriesAsync(
+        string category, int page, int pageSize, CancellationToken ct = default)
     {
-        var stories = await GetStoriesByCategoryAsync(category);
+        var stories = await GetStoriesByCategoryAsync(category, ct);
         return Paginate(stories, page, pageSize);
     }
 
-    public async Task<PagedResult<StoryDto>> SearchAsync(string category, string query, int page, int pageSize)
+    public async Task<PagedResult<StoryDto>> SearchAsync(
+        string category, string query, int page, int pageSize, CancellationToken ct = default)
     {
-        var storiesToSearch = await GetStoriesByCategoryAsync(category);
+        var storiesToSearch = await GetStoriesByCategoryAsync(category, ct);
 
         if (string.IsNullOrWhiteSpace(query))
-        {
             return Paginate(storiesToSearch, page, pageSize);
-        }
 
-        var lowerQuery = query.Trim().ToLowerInvariant();
-
+        var q = query.Trim().ToLowerInvariant();
         var filtered = storiesToSearch.Where(s =>
-            (s.Title?.ToLowerInvariant().Contains(lowerQuery) ?? false) ||
-            (s.Author?.ToLowerInvariant().Contains(lowerQuery) ?? false)
+            (s.Title?.ToLowerInvariant().Contains(q) ?? false) ||
+            (s.Author?.ToLowerInvariant().Contains(q) ?? false)
         ).ToList();
 
         return Paginate(filtered, page, pageSize);
     }
 
-    private async Task<List<StoryDto>> GetStoriesByCategoryAsync(string category)
+    private async Task<List<StoryDto>> GetStoriesByCategoryAsync(string category, CancellationToken ct)
     {
         var cacheKey = $"stories_{category}";
         if (!cache.TryGetValue(cacheKey, out List<StoryDto>? stories))
