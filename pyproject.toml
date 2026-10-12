@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "onchain-agent-sentinel"
+version = "0.1.0"
+description = "Autonomous LangGraph Agent for Onchain Intelligence and HTTP-402 Agentic Settlement"
+readme = "README.md"
+authors = [{ name = "Desh Deepak Kant", email = "deshdeepakkant@gmail.com" }]
+requires-python = ">=3.10"
+dependencies = [
+    "web3>=6.15.0",
+    "langgraph>=0.2.0",
+    "langchain-core>=0.3.0",
+    "pydantic>=2.7.0",
+    "fastapi>=0.110.0",
+    "uvicorn>=0.29.0",
+    "python-dotenv>=1.0.0",
+]
